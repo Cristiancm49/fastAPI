@@ -1,11 +1,17 @@
 # Python
 
+
+from dataclasses import field
+from doctest import Example
+from email.policy import default
+from turtle import title
 from typing import Optional
 from enum import Enum
 
 
+
 # Pydantic
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl, ValidationError
 from pydantic import Field 
 
 # FastAPI
@@ -16,18 +22,34 @@ from fastapi import Body, Query, Path
 app = FastAPI()
 
 # Models
+class City(Enum):
+    buenos_aires= "buenos aires"
+    bogota= "bogota"
+
+class State(Enum):
+    cundinamarca= "cundinamarca"
+    caqueta= "caqueta"
+
+class Country(Enum):
+    colombia= "colombia"
+    argentina= "argentina"
+
 class HairColor(Enum):
-    white: "white"
-    black: "black"
-    brown: "brown"
-    red: "red"
-    blonde: "blonde"
+    white= "white"
+    black= "black"
+    brown= "brown"
+    red= "red"
+    blonde= "blonde"
 
 
 class Location(BaseModel):
-    city: str
-    state: str
-    country: str
+    city: City = Field(default = None, example="bogota")
+    state: State = Field(default = None, example="cundinamarca")
+    country: Country = Field(default = None, example="colombia")
+
+
+class Person_email(BaseModel):
+    pass   
 
 
 class Person(BaseModel):
@@ -46,8 +68,19 @@ class Person(BaseModel):
         gt=0,
         le=100
     )
-    hair_color: Optional[HairColor] = Field(default = None)
+    hair_color: Optional[HairColor] = Field(default = "white")
     is_married: Optional[bool] = Field(default = None)
+
+    class Config:
+        schema_extra = {
+            "example":{
+                "first_name": "Cristian",
+                "last_name": "Cortes Mondragon",
+                "age": 21,
+                "hair_color": "blonde",
+                "is_married": True
+            }
+        }
 
 
 
@@ -105,3 +138,4 @@ def update_person(
     results = person.dict()
     results.update(location.dict())
     return results
+    
