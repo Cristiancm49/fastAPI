@@ -49,11 +49,7 @@ class Location(BaseModel):
     country: Country = Field(default = None, example="colombia")
 
 
-class Person_email(BaseModel):
-    pass   
-
-
-class Person(BaseModel):
+class PersonBase(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
@@ -70,39 +66,26 @@ class Person(BaseModel):
         le=100
     )
     hair_color: Optional[HairColor] = Field(default = "white")
-    is_married: Optional[bool] = Field(default = None)
+    is_married: Optional[bool] = Field(default = None) 
+
+
+class Person(PersonBase):
+    
     password: str = Field(..., min_Length=8)
 
 
-class PersonOut(BaseModel):
-    first_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=50
-    )
-    last_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=50
-    )
-    age: int = Field(
-        ...,
-        gt=0,
-        le=100
-    )
-    hair_color: Optional[HairColor] = Field(default = "white")
-    is_married: Optional[bool] = Field(default = None)
-    
+class PersonOut(PersonBase):
+   pass
 
 
-    class Config:
-        schema_extra = {
-            "example":{
-                "first_name": "Cristian",
-                "last_name": "Cortes Mondragon",
-                "age": 21,
-                "hair_color": "blonde",
-                "is_married": True
+class Config:
+    schema_extra = {
+        "example":{
+            "first_name": "Cristian",
+            "last_name": "Cortes Mondragon",
+            "age": 21,
+            "hair_color": "blonde",
+            "is_married": True
             }
         }
 
