@@ -100,11 +100,13 @@ def show_person(
         max_length=50,
         title="Person Name",
         description="This is the person name. It is between 1 and 50 chararters",
+        example="Andrea"
         ), 
     age: str = Query(
         ..., 
         title="Person Age",
         description="This is the person age. It is required",
+        example=42
         )
 ):
     return {name: age}
@@ -117,7 +119,8 @@ def show_person(
         ...,
         gt=0,
         title="Person id",
-        description="This is the person's id. It is required and must be graater than 0"
+        description="This is the person's id. It is required and must be graater than 0",
+        example=45
         )
 ):
     return {person_id: "It exists!"}
