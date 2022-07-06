@@ -7,6 +7,7 @@ from email.policy import default
 from turtle import title
 from typing import Optional
 from enum import Enum
+from urllib import response
 
 
 
@@ -70,6 +71,29 @@ class Person(BaseModel):
     )
     hair_color: Optional[HairColor] = Field(default = "white")
     is_married: Optional[bool] = Field(default = None)
+    password: str = Field(..., min_Length=8)
+
+
+class PersonOut(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    last_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=100
+    )
+    hair_color: Optional[HairColor] = Field(default = "white")
+    is_married: Optional[bool] = Field(default = None)
+    
+
 
     class Config:
         schema_extra = {
@@ -88,7 +112,7 @@ class Person(BaseModel):
 def home():
     return {"Hello" : "World"}
 
-@app.post("/person/new")
+@app.post("/person/new", response_model=PersonOut)
 def create_person(person: Person = Body(...)):
     return person
 
