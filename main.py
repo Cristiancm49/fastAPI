@@ -1,10 +1,11 @@
 # Python
 
 
-from dataclasses import field
+
+
+
+from difflib import restore
 from doctest import Example
-from email.policy import default
-from turtle import title
 from typing import Optional
 from enum import Enum
 from urllib import response
@@ -12,12 +13,13 @@ from urllib import response
 
 
 # Pydantic
-from pydantic import BaseModel, HttpUrl, ValidationError
+from pydantic import BaseModel
 from pydantic import Field 
 
 # FastAPI
 from fastapi import FastAPI
-from fastapi import Body, Query, Path
+from fastapi import status
+from fastapi import Body, Query, Path, Form
 
 
 app = FastAPI()
@@ -84,12 +86,13 @@ class Config:
             "first_name": "Cristian",
             "last_name": "Cortes Mondragon",
             "age": 21,
-            "hair_color": "blonde",
-            "is_married": True
+                "hair_color": "blonde",
+                "is_married": True
             }
         }
 
-
+class LoginOut(BaseModel):
+    username: str = Field(..., max_length=20, example="cristian")
 
 @app.get("/")
 def home():
@@ -149,3 +152,10 @@ def update_person(
     results.update(location.dict())
     return results
     
+@app.post(
+    path="/login",
+    response_model=LoginOut,
+    status_code=status.HTTP_200_OK
+)
+def login(username: str = Form(...), password: str = Form(...)):
+    return LoginOut(username=username)
